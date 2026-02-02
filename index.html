@@ -2,169 +2,213 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Sebosos Edition — Planner Dupla</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <title>Sebosos Edition 🥵</title>
   <style>
-    :root {
-      --bg: #0f0f0f;
-      --card: #1a1a1a;
-      --neon: #39ff14;
-      --danger: #ff3b3b;
-      --blue: #3b82f6;
-      --text: #f2f2f2;
-    }
-
-    * { box-sizing: border-box; font-family: Arial, sans-serif; }
-
     body {
-      background: var(--bg);
-      color: var(--text);
-      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: #fff;
       margin: 0;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: auto;
+      padding: 20px;
     }
 
     h1 {
       text-align: center;
-      color: var(--neon);
-      letter-spacing: 3px;
+      margin-bottom: 10px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      border: 1px solid #333;
-      padding: 12px;
+    .controls {
       text-align: center;
-      user-select: none;
+      margin-bottom: 20px;
     }
 
-    th {
-      background: #000;
-      color: var(--neon);
+    select {
+      padding: 6px;
+      font-size: 16px;
     }
 
-    .name-you { color: var(--neon); }
-    .name-prima { color: var(--blue); }
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
 
-    .cell {
+    .day {
+      background: #1e1e1e;
+      border-radius: 8px;
+      padding: 6px;
+      min-height: 90px;
+      font-size: 13px;
+    }
+
+    .day strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .checks {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    button {
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 4px;
       cursor: pointer;
-      font-size: 1.2rem;
+      font-size: 12px;
     }
 
-    .fail { background: #2a0000; color: var(--danger); }
-    .ok { background: #002a00; color: var(--neon); }
-    .bonus { background: #003333; color: #00ffff; }
-
-    .total {
-      font-weight: bold;
-      color: var(--neon);
+    button.active {
+      background: #00c853;
     }
 
-    .total.prima {
-      color: var(--blue);
+    .summary {
+      margin-top: 30px;
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .summary h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .players {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+    }
+
+    .player {
+      background: #111;
+      padding: 10px;
+      border-radius: 8px;
+      width: 45%;
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>SEBOSOS EDITION — DUPLA</h1>
+<h1>🔥 Sebosos Edition 🔥</h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th rowspan="2">Semana</th>
-        <th colspan="2">Seg</th>
-        <th colspan="2">Ter</th>
-        <th colspan="2">Qua</th>
-        <th colspan="2">Qui</th>
-        <th colspan="2">Sex</th>
-        <th colspan="2">Sáb ⭐</th>
-        <th rowspan="2">Total Você</th>
-        <th rowspan="2">Total Prima</th>
-      </tr>
-      <tr>
-        <th class="name-you">Você</th>
-        <th class="name-prima">Prima</th>
-        <th class="name-you">Você</th>
-        <th class="name-prima">Prima</th>
-        <th class="name-you">Você</th>
-        <th class="name-prima">Prima</th>
-        <th class="name-you">Você</th>
-        <th class="name-prima">Prima</th>
-        <th class="name-you">Você</th>
-        <th class="name-prima">Prima</th>
-        <th class="name-you">Você</th>
-        <th class="name-prima">Prima</th>
-      </tr>
-    </thead>
+<div class="controls">
+  <select id="month"></select>
+  <select id="year"></select>
+</div>
 
-    <tbody>
-      <tr>
-        <td>Semana 1</td>
+<div class="calendar" id="calendar"></div>
 
-        <!-- 12 células (6 dias x 2 pessoas) -->
-        <td class="cell you"></td><td class="cell prima"></td>
-        <td class="cell you"></td><td class="cell prima"></td>
-        <td class="cell you"></td><td class="cell prima"></td>
-        <td class="cell you"></td><td class="cell prima"></td>
-        <td class="cell you"></td><td class="cell prima"></td>
-        <td class="cell you"></td><td class="cell prima"></td>
-
-        <td class="total you">0</td>
-        <td class="total prima">0</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="summary">
+  <h2>😈 Resumo Caótico</h2>
+  <div class="players">
+    <div class="player" id="player1"></div>
+    <div class="player" id="player2"></div>
+  </div>
 </div>
 
 <script>
-  const states = [
-    { text: "", value: 0, class: "" },
-    { text: "❌", value: 0, class: "fail" },
-    { text: "✅", value: 1, class: "ok" },
-    { text: "⭐", value: 2, class: "bonus" }
+const players = ["Matheus", "Prima"];
+const calendarEl = document.getElementById("calendar");
+const monthSelect = document.getElementById("month");
+const yearSelect = document.getElementById("year");
+
+const data = JSON.parse(localStorage.getItem("sebosos")) || {};
+
+function save() {
+  localStorage.setItem("sebosos", JSON.stringify(data));
+}
+
+function createSelectors() {
+  const months = [
+    "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+    "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
   ];
 
-  document.querySelectorAll(".cell").forEach(cell => {
-    cell.state = 0;
-
-    cell.addEventListener("click", () => {
-      cell.state = (cell.state + 1) % states.length;
-      const s = states[cell.state];
-
-      cell.textContent = s.text;
-      cell.className = "cell " + (cell.classList.contains("you") ? "you " : "prima ") + s.class;
-
-      updateTotals(cell.closest("tr"));
-    });
+  months.forEach((m, i) => {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = m;
+    monthSelect.appendChild(opt);
   });
 
-  function updateTotals(row) {
-    let youTotal = 0;
-    let primaTotal = 0;
-
-    row.querySelectorAll(".cell.you").forEach(c => {
-      youTotal += states[c.state].value;
-    });
-
-    row.querySelectorAll(".cell.prima").forEach(c => {
-      primaTotal += states[c.state].value;
-    });
-
-    row.querySelector(".total.you").textContent = youTotal;
-    row.querySelector(".total.prima").textContent = primaTotal;
+  for (let y = 2025; y <= 2030; y++) {
+    const opt = document.createElement("option");
+    opt.value = y;
+    opt.textContent = y;
+    yearSelect.appendChild(opt);
   }
+
+  const now = new Date();
+  monthSelect.value = now.getMonth();
+  yearSelect.value = now.getFullYear();
+}
+
+function renderCalendar() {
+  calendarEl.innerHTML = "";
+  const month = +monthSelect.value;
+  const year = +yearSelect.value;
+
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = `${year}-${month}-${d}`;
+    if (!data[key]) data[key] = [false, false];
+
+    const dayEl = document.createElement("div");
+    dayEl.className = "day";
+
+    dayEl.innerHTML = `<strong>${d}</strong>`;
+
+    const checks = document.createElement("div");
+    checks.className = "checks";
+
+    players.forEach((p, i) => {
+      const btn = document.createElement("button");
+      btn.textContent = p;
+      if (data[key][i]) btn.classList.add("active");
+
+      btn.onclick = () => {
+        data[key][i] = !data[key][i];
+        save();
+        renderCalendar();
+        renderSummary();
+      };
+
+      checks.appendChild(btn);
+    });
+
+    dayEl.appendChild(checks);
+    calendarEl.appendChild(dayEl);
+  }
+}
+
+function renderSummary() {
+  players.forEach((p, i) => {
+    let treinos = 0;
+    Object.values(data).forEach(day => {
+      if (day[i]) treinos++;
+    });
+
+    document.getElementById(`player${i+1}`).innerHTML = `
+      <h3>${p}</h3>
+      <p>🏋️ Treinos feitos: <strong>${treinos}</strong></p>
+      <p>😴 Faltas suspeitas: <strong>${Math.max(0, 20 - treinos)}</strong></p>
+      <p>😈 Punição: <em>a definir…</em></p>
+    `;
+  });
+}
+
+createSelectors();
+renderCalendar();
+renderSummary();
+
+monthSelect.onchange = renderCalendar;
+yearSelect.onchange = renderCalendar;
 </script>
 
 </body>
