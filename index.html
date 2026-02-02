@@ -1,97 +1,124 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Sebosos Edition 🥵</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f0f0f;
-      color: #fff;
-      margin: 0;
-      padding: 20px;
-    }
+<meta charset="UTF-8">
+<title>Sebosos Edition 🥵</title>
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+<style>
+  body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f2f4f8;
+    margin: 0;
+    padding: 20px;
+    color: #222;
+  }
 
-    .controls {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+  h1 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
 
-    select {
-      padding: 6px;
-      font-size: 16px;
-    }
+  .controls {
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
-    .calendar {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-    }
+  select {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
 
-    .day {
-      background: #1e1e1e;
-      border-radius: 8px;
-      padding: 6px;
-      min-height: 90px;
-      font-size: 13px;
-    }
+  .weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 6px;
+    text-align: center;
+    font-weight: bold;
+  }
 
-    .day strong {
-      display: block;
-      margin-bottom: 6px;
-    }
+  .weekdays .sat {
+    color: #c62828;
+  }
 
-    .checks {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+  .calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+  }
 
-    button {
-      background: #333;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 4px;
-      cursor: pointer;
-      font-size: 12px;
-    }
+  .day {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 8px;
+    min-height: 115px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 
-    button.active {
-      background: #00c853;
-    }
+  .day.sat {
+    background: #fff0f0;
+    border: 2px solid #ffb3b3;
+  }
 
-    .summary {
-      margin-top: 30px;
-      background: #1a1a1a;
-      padding: 15px;
-      border-radius: 10px;
-    }
+  .day.empty {
+    background: transparent;
+    box-shadow: none;
+  }
 
-    .summary h2 {
-      margin-top: 0;
-      text-align: center;
-    }
+  .checks {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 6px;
+  }
 
-    .players {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 10px;
-    }
+  button {
+    border: none;
+    border-radius: 6px;
+    padding: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    background: #e0e0e0;
+  }
 
-    .player {
-      background: #111;
-      padding: 10px;
-      border-radius: 8px;
-      width: 45%;
-    }
-  </style>
+  button.active.p1 {
+    background: #42a5f5;
+    color: #fff;
+  }
+
+  button.active.p2 {
+    background: #66bb6a;
+    color: #fff;
+  }
+
+  .summary {
+    margin-top: 30px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .players {
+    display: flex;
+    gap: 20px;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+
+  .player {
+    background: #f7f9fc;
+    padding: 15px;
+    border-radius: 12px;
+    width: 260px;
+  }
+</style>
 </head>
+
 <body>
 
 <h1>🔥 Sebosos Edition 🔥</h1>
@@ -99,6 +126,11 @@
 <div class="controls">
   <select id="month"></select>
   <select id="year"></select>
+</div>
+
+<div class="weekdays">
+  <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div>
+  <div>Qui</div><div>Sex</div><div class="sat">Sáb</div>
 </div>
 
 <div class="calendar" id="calendar"></div>
@@ -124,10 +156,8 @@ function save() {
 }
 
 function createSelectors() {
-  const months = [
-    "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-    "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
-  ];
+  const months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+                  "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 
   months.forEach((m, i) => {
     const opt = document.createElement("option");
@@ -136,7 +166,7 @@ function createSelectors() {
     monthSelect.appendChild(opt);
   });
 
-  for (let y = 2025; y <= 2030; y++) {
+  for (let y = 2024; y <= 2030; y++) {
     const opt = document.createElement("option");
     opt.value = y;
     opt.textContent = y;
@@ -150,17 +180,27 @@ function createSelectors() {
 
 function renderCalendar() {
   calendarEl.innerHTML = "";
+
   const month = +monthSelect.value;
   const year = +yearSelect.value;
 
+  const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
+  for (let i = 0; i < firstDay; i++) {
+    calendarEl.appendChild(document.createElement("div")).className = "day empty";
+  }
+
   for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(year, month, d);
+    const dayOfWeek = date.getDay();
     const key = `${year}-${month}-${d}`;
+
     if (!data[key]) data[key] = [false, false];
 
     const dayEl = document.createElement("div");
     dayEl.className = "day";
+    if (dayOfWeek === 6) dayEl.classList.add("sat");
 
     dayEl.innerHTML = `<strong>${d}</strong>`;
 
@@ -170,7 +210,8 @@ function renderCalendar() {
     players.forEach((p, i) => {
       const btn = document.createElement("button");
       btn.textContent = p;
-      if (data[key][i]) btn.classList.add("active");
+      btn.classList.add(`p${i+1}`);
+      if (data[key][i]) btn.classList.add("active", `p${i+1}`);
 
       btn.onclick = () => {
         data[key][i] = !data[key][i];
@@ -187,18 +228,53 @@ function renderCalendar() {
   }
 }
 
+function getWeekNumber(d) {
+  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+
 function renderSummary() {
   players.forEach((p, i) => {
     let treinos = 0;
-    Object.values(data).forEach(day => {
-      if (day[i]) treinos++;
+    let faltas = 0;
+    let bonusSabado = 0;
+    const weeks = {};
+
+    Object.keys(data).forEach(key => {
+      const [y,m,d] = key.split("-").map(Number);
+      const date = new Date(y,m,d);
+      const week = getWeekNumber(date);
+      const day = date.getDay();
+      const wKey = `${y}-${week}`;
+
+      if (!weeks[wKey]) weeks[wKey] = { treinos:0, faltas:0, sab:false };
+
+      if (day >= 1 && day <= 5) {
+        data[key][i] ? weeks[wKey].treinos++ : weeks[wKey].faltas++;
+      }
+
+      if (day === 6 && data[key][i]) weeks[wKey].sab = true;
+    });
+
+    Object.values(weeks).forEach(w => {
+      treinos += w.treinos;
+      if (w.sab) {
+        treinos += 1;
+        if (w.faltas === 0) bonusSabado++;
+      } else {
+        faltas += w.faltas;
+      }
     });
 
     document.getElementById(`player${i+1}`).innerHTML = `
       <h3>${p}</h3>
-      <p>🏋️ Treinos feitos: <strong>${treinos}</strong></p>
-      <p>😴 Faltas suspeitas: <strong>${Math.max(0, 20 - treinos)}</strong></p>
-      <p>😈 Punição: <em>a definir…</em></p>
+      <p>🏋️ Treinos válidos: <strong>${treinos}</strong></p>
+      <p>😴 Faltas não cobertas: <strong>${faltas}</strong></p>
+      <p>⭐ Sábados bônus: <strong>${bonusSabado}</strong></p>
+      <p>😈 Status: <strong>${faltas > 0 ? "Em risco" : "Seboso exemplar"}</strong></p>
     `;
   });
 }
@@ -207,8 +283,8 @@ createSelectors();
 renderCalendar();
 renderSummary();
 
-monthSelect.onchange = renderCalendar;
-yearSelect.onchange = renderCalendar;
+monthSelect.onchange = () => { renderCalendar(); renderSummary(); };
+yearSelect.onchange = () => { renderCalendar(); renderSummary(); };
 </script>
 
 </body>
