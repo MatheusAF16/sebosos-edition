@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sebosos Edition 🥵</title>
 
 <style>
@@ -28,6 +29,7 @@
     font-size: 16px;
     border-radius: 6px;
     border: 1px solid #ccc;
+    margin: 5px;
   }
 
   .weekdays {
@@ -116,6 +118,55 @@
     border-radius: 12px;
     width: 260px;
   }
+
+  /* 🔥 RESPONSIVO (CELULAR) 🔥 */
+  @media (max-width: 768px) {
+
+    body {
+      padding: 10px;
+    }
+
+    h1 {
+      font-size: 22px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    select {
+      width: 100%;
+      max-width: 160px;
+    }
+
+    .weekdays div {
+      font-size: 12px;
+      padding: 4px;
+    }
+
+    .day {
+      min-height: 95px;
+      padding: 6px;
+    }
+
+    .checks button {
+      font-size: 11px;
+      padding: 5px;
+    }
+
+    .players {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .player {
+      width: 100%;
+      max-width: 320px;
+    }
+  }
 </style>
 </head>
 
@@ -129,8 +180,9 @@
 </div>
 
 <div class="weekdays">
-  <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div>
-  <div>Qui</div><div>Sex</div><div class="sat">Sáb</div>
+  <div>Dom</div><div>Seg</div><div>Ter</div>
+  <div>Qua</div><div>Qui</div><div>Sex</div>
+  <div class="sat">Sáb</div>
 </div>
 
 <div class="calendar" id="calendar"></div>
