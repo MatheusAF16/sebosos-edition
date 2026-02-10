@@ -1,175 +1,124 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sebosos Edition 🥵</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sebosos Edition 🏋️‍♂️🔥</title>
 
-<style>
-  body {
-    font-family: "Segoe UI", Arial, sans-serif;
-    background: #f2f4f8;
-    margin: 0;
-    padding: 20px;
-    color: #222;
-  }
+  <!-- Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-  h1 {
-    text-align: center;
-    margin-bottom: 10px;
-  }
-
-  .controls {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
-  select {
-    padding: 8px;
-    font-size: 16px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    margin: 5px;
-  }
-
-  .weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    margin-bottom: 6px;
-    text-align: center;
-    font-weight: bold;
-  }
-
-  .weekdays .sat {
-    color: #c62828;
-  }
-
-  .calendar {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
-  }
-
-  .day {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 8px;
-    min-height: 115px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .day.sat {
-    background: #fff0f0;
-    border: 2px solid #ffb3b3;
-  }
-
-  .day.empty {
-    background: transparent;
-    box-shadow: none;
-  }
-
-  .checks {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-top: 6px;
-  }
-
-  button {
-    border: none;
-    border-radius: 6px;
-    padding: 6px;
-    cursor: pointer;
-    font-size: 12px;
-    background: #e0e0e0;
-  }
-
-  button.active.p1 {
-    background: #42a5f5;
-    color: #fff;
-  }
-
-  button.active.p2 {
-    background: #66bb6a;
-    color: #fff;
-  }
-
-  .summary {
-    margin-top: 30px;
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 14px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
-
-  .players {
-    display: flex;
-    gap: 20px;
-    justify-content: space-around;
-    flex-wrap: wrap;
-  }
-
-  .player {
-    background: #f7f9fc;
-    padding: 15px;
-    border-radius: 12px;
-    width: 260px;
-  }
-
-  /* 🔥 RESPONSIVO (CELULAR) 🔥 */
-  @media (max-width: 768px) {
-
+  <style>
+    * { box-sizing: border-box; }
     body {
-      padding: 10px;
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #111);
+      color: #fff;
+      padding: 12px;
     }
 
     h1 {
-      font-size: 22px;
+      text-align: center;
+      margin-bottom: 8px;
     }
 
     .controls {
       display: flex;
-      flex-wrap: wrap;
+      gap: 8px;
       justify-content: center;
-      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
     }
 
     select {
-      width: 100%;
-      max-width: 160px;
+      padding: 6px;
+      border-radius: 6px;
+      border: none;
     }
 
-    .weekdays div {
-      font-size: 12px;
-      padding: 4px;
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .day-name {
+      text-align: center;
+      font-weight: bold;
+      font-size: 0.8rem;
+      opacity: 0.8;
     }
 
     .day {
-      min-height: 95px;
+      background: #1f2937;
+      border-radius: 10px;
       padding: 6px;
+      min-height: 90px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .checks button {
-      font-size: 11px;
-      padding: 5px;
+    .day.saturday {
+      border: 2px solid #facc15;
+    }
+
+    .date {
+      font-size: 0.75rem;
+      opacity: 0.8;
+      margin-bottom: 4px;
     }
 
     .players {
+      display: flex;
       flex-direction: column;
-      align-items: center;
+      gap: 4px;
     }
 
-    .player {
-      width: 100%;
-      max-width: 320px;
+    button {
+      border: none;
+      border-radius: 6px;
+      padding: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: 0.2s;
     }
-  }
-</style>
+
+    .on { background: #22c55e; color: #000; }
+    .off { background: #ef4444; color: #000; }
+
+    .save-anim {
+      animation: pulse 0.6s ease;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); background:#22c55e; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .summary {
+      margin-top: 20px;
+      background: #020617;
+      padding: 12px;
+      border-radius: 12px;
+    }
+
+    .summary h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    .score {
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
-
 <body>
 
 <h1>🔥 Sebosos Edition 🔥</h1>
@@ -179,164 +128,150 @@
   <select id="year"></select>
 </div>
 
-<div class="weekdays">
-  <div>Dom</div><div>Seg</div><div>Ter</div>
-  <div>Qua</div><div>Qui</div><div>Sex</div>
-  <div class="sat">Sáb</div>
-</div>
-
 <div class="calendar" id="calendar"></div>
 
 <div class="summary">
   <h2>😈 Resumo Caótico</h2>
-  <div class="players">
-    <div class="player" id="player1"></div>
-    <div class="player" id="player2"></div>
-  </div>
+  <div class="score" id="summary"></div>
 </div>
 
 <script>
-const players = ["Matheus", "Nanda"];
-const calendarEl = document.getElementById("calendar");
-const monthSelect = document.getElementById("month");
-const yearSelect = document.getElementById("year");
+  // 🔥 Firebase init
+  const firebaseConfig = {
+    apiKey: "AIzaSyBOMibYsRMs_O9aKtB58IPdrA64yzW0kFI",
+    authDomain: "sebosos-edition.firebaseapp.com",
+    projectId: "sebosos-edition",
+  };
 
-const data = JSON.parse(localStorage.getItem("sebosos")) || {};
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
-function save() {
-  localStorage.setItem("sebosos", JSON.stringify(data));
-}
+  const players = ["Matheus", "Nanda"];
+  const calendar = document.getElementById("calendar");
+  const monthSelect = document.getElementById("month");
+  const yearSelect = document.getElementById("year");
+  const summaryEl = document.getElementById("summary");
 
-function createSelectors() {
-  const months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-                  "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  let data = {};
+  let unsubscribe = null;
 
-  months.forEach((m, i) => {
-    const opt = document.createElement("option");
-    opt.value = i;
-    opt.textContent = m;
-    monthSelect.appendChild(opt);
-  });
+  const daysNames = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 
-  for (let y = 2024; y <= 2030; y++) {
-    const opt = document.createElement("option");
-    opt.value = y;
-    opt.textContent = y;
-    yearSelect.appendChild(opt);
+  function createSelectors() {
+    const months = [
+      "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+      "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+    ];
+
+    months.forEach((m,i)=>{
+      const o=document.createElement("option");
+      o.value=i+1; o.textContent=m;
+      monthSelect.appendChild(o);
+    });
+
+    const year = new Date().getFullYear();
+    for(let y=year-1;y<=year+1;y++){
+      const o=document.createElement("option");
+      o.value=y; o.textContent=y;
+      yearSelect.appendChild(o);
+    }
+
+    monthSelect.value=new Date().getMonth()+1;
+    yearSelect.value=year;
   }
 
-  const now = new Date();
-  monthSelect.value = now.getMonth();
-  yearSelect.value = now.getFullYear();
-}
+  function loadMonth() {
+    const m = monthSelect.value;
+    const y = yearSelect.value;
+    const docId = `${y}-${m}`;
 
-function renderCalendar() {
-  calendarEl.innerHTML = "";
+    if(unsubscribe) unsubscribe();
 
-  const month = +monthSelect.value;
-  const year = +yearSelect.value;
-
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  for (let i = 0; i < firstDay; i++) {
-    calendarEl.appendChild(document.createElement("div")).className = "day empty";
-  }
-
-  for (let d = 1; d <= daysInMonth; d++) {
-    const date = new Date(year, month, d);
-    const dayOfWeek = date.getDay();
-    const key = `${year}-${month}-${d}`;
-
-    if (!data[key]) data[key] = [false, false];
-
-    const dayEl = document.createElement("div");
-    dayEl.className = "day";
-    if (dayOfWeek === 6) dayEl.classList.add("sat");
-
-    dayEl.innerHTML = `<strong>${d}</strong>`;
-
-    const checks = document.createElement("div");
-    checks.className = "checks";
-
-    players.forEach((p, i) => {
-      const btn = document.createElement("button");
-      btn.textContent = p;
-      btn.classList.add(`p${i+1}`);
-      if (data[key][i]) btn.classList.add("active", `p${i+1}`);
-
-      btn.onclick = () => {
-        data[key][i] = !data[key][i];
-        save();
+    unsubscribe = db.collection("planners")
+      .doc(docId)
+      .onSnapshot(doc=>{
+        data = doc.exists ? doc.data().days || {} : {};
         renderCalendar();
         renderSummary();
-      };
-
-      checks.appendChild(btn);
-    });
-
-    dayEl.appendChild(checks);
-    calendarEl.appendChild(dayEl);
+      });
   }
-}
 
-function getWeekNumber(d) {
-  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  const dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-}
+  function renderCalendar() {
+    calendar.innerHTML="";
 
-function renderSummary() {
-  players.forEach((p, i) => {
-    let treinos = 0;
-    let faltas = 0;
-    let bonusSabado = 0;
-    const weeks = {};
-
-    Object.keys(data).forEach(key => {
-      const [y,m,d] = key.split("-").map(Number);
-      const date = new Date(y,m,d);
-      const week = getWeekNumber(date);
-      const day = date.getDay();
-      const wKey = `${y}-${week}`;
-
-      if (!weeks[wKey]) weeks[wKey] = { treinos:0, faltas:0, sab:false };
-
-      if (day >= 1 && day <= 5) {
-        data[key][i] ? weeks[wKey].treinos++ : weeks[wKey].faltas++;
-      }
-
-      if (day === 6 && data[key][i]) weeks[wKey].sab = true;
+    daysNames.forEach(d=>{
+      const div=document.createElement("div");
+      div.className="day-name";
+      div.textContent=d;
+      calendar.appendChild(div);
     });
 
-    Object.values(weeks).forEach(w => {
-      treinos += w.treinos;
-      if (w.sab) {
-        treinos += 1;
-        if (w.faltas === 0) bonusSabado++;
-      } else {
-        faltas += w.faltas;
-      }
+    const y=+yearSelect.value;
+    const m=+monthSelect.value;
+    const firstDay=new Date(y,m-1,1).getDay();
+    const totalDays=new Date(y,m,0).getDate();
+
+    for(let i=0;i<firstDay;i++){
+      calendar.appendChild(document.createElement("div"));
+    }
+
+    for(let d=1;d<=totalDays;d++){
+      const date=new Date(y,m-1,d);
+      const key=`${y}-${m}-${d}`;
+      if(!data[key]) data[key]=[false,false];
+
+      const div=document.createElement("div");
+      div.className="day";
+      if(date.getDay()===6) div.classList.add("saturday");
+
+      div.innerHTML=`<div class="date">${d}</div>`;
+      const pDiv=document.createElement("div");
+      pDiv.className="players";
+
+      players.forEach((p,i)=>{
+        const btn=document.createElement("button");
+        btn.textContent=p;
+        btn.className=data[key][i]?"on":"off";
+
+        btn.onclick=async()=>{
+          data[key][i]=!data[key][i];
+
+          // sábado cobre falta
+          if(date.getDay()===6 && data[key][i]){
+            btn.classList.add("save-anim");
+          }
+
+          await db.collection("planners")
+            .doc(`${y}-${m}`)
+            .set({days:data},{merge:true});
+        };
+
+        pDiv.appendChild(btn);
+      });
+
+      div.appendChild(pDiv);
+      calendar.appendChild(div);
+    }
+  }
+
+  function renderSummary() {
+    let score=[0,0];
+    Object.values(data).forEach(v=>{
+      v.forEach((x,i)=> x && score[i]++);
     });
 
-    document.getElementById(`player${i+1}`).innerHTML = `
-      <h3>${p}</h3>
-      <p>🏋️ Treinos válidos: <strong>${treinos}</strong></p>
-      <p>😴 Faltas não cobertas: <strong>${faltas}</strong></p>
-      <p>⭐ Sábados bônus: <strong>${bonusSabado}</strong></p>
-      <p>😈 Status: <strong>${faltas > 0 ? "Em risco" : "Seboso exemplar"}</strong></p>
-    `;
-  });
-}
+    summaryEl.innerHTML=players.map((p,i)=>`
+      <div>
+        <strong>${p}</strong><br>
+        🟢 ${score[i]} treinos
+      </div>
+    `).join("");
+  }
 
-createSelectors();
-renderCalendar();
-renderSummary();
-
-monthSelect.onchange = () => { renderCalendar(); renderSummary(); };
-yearSelect.onchange = () => { renderCalendar(); renderSummary(); };
+  createSelectors();
+  loadMonth();
+  monthSelect.onchange=loadMonth;
+  yearSelect.onchange=loadMonth;
 </script>
 
 </body>
